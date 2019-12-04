@@ -494,13 +494,9 @@ class ApplicationBase(object):
             return (None, None)
 
     def create_cos_connection(self, conn):
-        print(conn)
         additional_info = json.loads(conn['additional_info'])
         aws_access_key_id = additional_info.get('accesser_access_key', None)
         aws_secret_access_key = additional_info.get('accesser_secret_key', None)
-        print('before')
-        print(aws_access_key_id)
-        print(aws_secret_access_key)
 
         try:
             if not aws_access_key_id or not aws_secret_access_key:
@@ -516,10 +512,6 @@ class ApplicationBase(object):
                 aws_secret_access_key = self.cipher.decrypt(aws_secret_access_key)
         except Exception as err:
             log_error("Credentials problem '%s' with COS connection %s" % (str(err), conn['name']), 'MAIN')
-
-        print('after')
-        print(aws_access_key_id)
-        print(aws_secret_access_key)
 
         client = boto3.client(
             's3',
