@@ -6,7 +6,7 @@ LABEL application_name="example"
 LABEL filetypes="all"
 LABEL description="Performs a character count on a specified file."
 #smeverv2 (ex: 0.1.2)
-LABEL version="0.0.1"
+LABEL version="0.0.2"
 #license type (ex: MIT)
 LABEL license="mit"
 

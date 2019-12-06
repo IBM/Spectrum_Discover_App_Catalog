@@ -6,7 +6,7 @@ LABEL application_name="exif_header_extractor"
 LABEL filetypes="jpg,jpeg,tiff"
 LABEL description="Extracts exif header information for jpeg, tiff files"
 #smeverv2 (ex: 0.1.2)
-LABEL version="0.0.1"
+LABEL version="0.0.2"
 #license type (ex: MIT)
 LABEL license="mit"
 
