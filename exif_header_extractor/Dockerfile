@@ -1,12 +1,12 @@
 FROM ibmcom/spectrum-discover-application-sdk:latest
 
 ### Required labels
-LABEL application_name="exif_header_extractor"
+LABEL application_name="exif-header-extractor"
 # comma delimted list of file extensions (ex: jpg,jpeg,tiff)
 LABEL filetypes="jpg,jpeg,tiff"
 LABEL description="Extracts exif header information for jpeg, tiff files"
 #smeverv2 (ex: 0.1.2)
-LABEL version="0.0.3"
+LABEL version="0.0.4"
 #license type (ex: MIT)
 LABEL license="mit"
 
