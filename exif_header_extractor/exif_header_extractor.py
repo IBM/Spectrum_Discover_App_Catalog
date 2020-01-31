@@ -13,7 +13,20 @@ from ibm_spectrum_discover_application_sdk.ApplicationMessageBase import Applica
 from ibm_spectrum_discover_application_sdk.ApplicationLib import ApplicationBase
 from ibm_spectrum_discover_application_sdk.DocumentRetrievalBase import DocumentKey, DocumentRetrievalFactory
 
+import logging
 import os
+import sys
+
+ENCODING = 'utf-8'
+
+LOG_LEVELS = {'INFO': logging.INFO, 'DEBUG': logging.DEBUG,
+              'ERROR': logging.ERROR, 'WARNING': logging.WARNING}
+LOG_LEVEL = os.environ.get('LOG_LEVEL', 'INFO')
+LOG_FORMAT = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+logging.basicConfig(stream=sys.stdout,
+                    format=LOG_FORMAT,
+                    level=LOG_LEVELS[LOG_LEVEL])
+logger = logging.getLogger(os.environ.get('APPLICATION_NAME', 'application'))
 
 if __name__ == '__main__':
     registration_info = {
@@ -52,7 +65,7 @@ if __name__ == '__main__':
                 if key.id not in drh:
                     drh[key.id] = DocumentRetrievalFactory().create(application, key)
 
-                print('PID:{} Inspecting Document:{}'.format(os.getpid(), key.path))
+                logger.info('PID: %s Inspecting Document: %s', str(os.getpid()), key.path.decode(ENCODING))
 
                 # Typical workflow
                 # Application does it's work on the file based on the action params
@@ -60,7 +73,7 @@ if __name__ == '__main__':
                 try:
                     tmpfile_path = drh[key.id].get_document(key)
                 except AttributeError:
-                    print("Connection does not exist for {}. Skipping.".format(key.id))
+                    logger.info("Connection does not exist for %s. Skipping.", str(key.id))
                     reply.add_result('skipped', key)
                     continue
 
