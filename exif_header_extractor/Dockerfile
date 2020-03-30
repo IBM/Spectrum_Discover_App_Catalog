@@ -21,8 +21,8 @@ LABEL license="mit"
 
 COPY exif_header_extractor.py requirements.txt /application/
 
-RUN    python3 -m pip install -r /application/requirements.txt && \
+RUN    python3.6 -m pip install -r /application/requirements.txt && \
        rm -f /application/requirements.txt
 
 ENTRYPOINT []
-CMD ["python3", "/application/exif_header_extractor.py"]
+CMD ["python3.6", "/application/exif_header_extractor.py"]
