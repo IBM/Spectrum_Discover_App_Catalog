@@ -34,13 +34,13 @@ LOG_FORMAT = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 logging.basicConfig(stream=sys.stdout,
                     format=LOG_FORMAT,
                     level=LOG_LEVELS[LOG_LEVEL])
+logger = logging.getLogger(os.environ.get('APPLICATION_NAME', 'file-checksum'))
+
 
 SUPPORTED_CHECKSUMS = ['sha3_384', 'sha1', 'sha256', 'sha512', 'sha384', 'md5', 'sha3_224', 'sha3_512', 'sha224', 'sha3_256']
 
 def main():  # pylint: disable=too-many-locals
     """Perform checksum on given files."""
-    logger = logging.getLogger(os.environ.get('APPLICATION_NAME', 'file-checksum'))
-
     registration_info = {
         "action_id": "DEEPINSPECT",
         "action_params": ["extract_tags"]
@@ -83,6 +83,10 @@ def main():  # pylint: disable=too-many-locals
                 break
 
             for docs in work['docs']:
+
+                # check to see if there are any connection updates available and close them
+                check_for_connection_updates(application, drh)
+
                 # DocumentKey is a unique identifier for a document, amalgam of connection + name
                 key = DocumentKey(docs)
                 # Create and store a retriever for this if we haven't yet
@@ -143,6 +147,21 @@ def main():  # pylint: disable=too-many-locals
         else:
             # timeout
             pass
+
+def check_for_connection_updates(application, drh):
+    """Check for connection updates and close connection if needed."""
+    while True:
+        try:
+            # This will raise a KeyError when nothing is in the set
+            conn = application.kafka_connections_to_update.pop()
+
+            logger.debug("Closing connection: %s", str(conn))
+            drh[conn].close_connection()
+
+            # Always remove the element without error
+            drh.pop(conn, None)
+        except KeyError:
+            break
 
 if __name__ == '__main__':
     main()
