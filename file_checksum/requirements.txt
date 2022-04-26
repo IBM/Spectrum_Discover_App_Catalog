@@ -1,1 +1,1 @@
-ibm_spectrum_discover_application_sdk
+ibm_spectrum_discover_application_sdk==0.0.22

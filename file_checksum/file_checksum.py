@@ -73,8 +73,9 @@ def main():  # pylint: disable=too-many-locals
             try:
                 extract_tags = work['action_params']['extract_tags']
                 unsupported_checksums = [tag for tag in extract_tags if tag not in SUPPORTED_CHECKSUMS]
+                valid_checksums = [tag for tag in extract_tags if tag in SUPPORTED_CHECKSUMS]
                 if unsupported_checksums:
-                    logger.error('This application does not currently support the following checksum(s): %s. '
+                    logger.warning('This application does not currently support the following checksum(s): %s. '
                                  'Please contact the maintainer or submit a PR to add support for the specified checksum(s) if needed.',
                                  str(unsupported_checksums))
                     break
@@ -129,7 +130,7 @@ def main():  # pylint: disable=too-many-locals
                         continue
 
                     tags = {}
-                    for tag in extract_tags:
+                    for tag in valid_checksums:
                         checksum = getattr(hashlib, tag)()
                         checksum.update(content)
                         tags[tag] = checksum.hexdigest()
@@ -138,7 +139,12 @@ def main():  # pylint: disable=too-many-locals
                     ##################################################
 
                     drh[key.id].cleanup_document()
-                    reply.add_result('success', key, tags)
+
+                    # only reply success if we had at least 1 valid tag passed to scan, otherwise mark as skipped
+                    if valid_checksums:
+                        reply.add_result('success', key, tags)
+                    else:
+                        reply.add_result('skipped', key)
                 else:
                     reply.add_result('failed', key)
 
