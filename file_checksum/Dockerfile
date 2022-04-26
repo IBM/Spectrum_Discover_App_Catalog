@@ -6,7 +6,7 @@ LABEL application_name="file-checksum"
 LABEL filetypes="all"
 LABEL description="Performs a checksum on a file based on the tag value received."
 #smeverv2 (ex: 0.1.2)
-LABEL version="0.0.1"
+LABEL version="0.0.2"
 #license type (ex: MIT)
 LABEL license="mit"
 
@@ -21,8 +21,9 @@ LABEL maintainer="drolson@us.ibm.com"
 
 COPY file_checksum.py requirements.txt /application/
 
-RUN    python3.6 -m pip install -r /application/requirements.txt && \
-       rm -f /application/requirements.txt
+RUN python3 -m pip install -r /application/requirements.txt && \
+    rm -f /application/requirements.txt
 
 ENTRYPOINT []
-CMD ["python3.6", "/application/file_checksum.py"]
+
+CMD ["python3", "/application/file_checksum.py"]

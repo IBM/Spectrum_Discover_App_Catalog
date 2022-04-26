@@ -6,7 +6,7 @@ LABEL application_name="exif-header-extractor"
 LABEL filetypes="jpg,jpeg,tiff"
 LABEL description="Extracts exif header information for jpeg, tiff files"
 #smeverv2 (ex: 0.1.2)
-LABEL version="0.0.4"
+LABEL version="0.0.5"
 #license type (ex: MIT)
 LABEL license="mit"
 
@@ -21,8 +21,8 @@ LABEL license="mit"
 
 COPY exif_header_extractor.py requirements.txt /application/
 
-RUN    python3.6 -m pip install -r /application/requirements.txt && \
-       rm -f /application/requirements.txt
+RUN python3 -m pip install -r /application/requirements.txt && \
+    rm -f /application/requirements.txt
 
 ENTRYPOINT []
-CMD ["python3.6", "/application/exif_header_extractor.py"]
+CMD ["python3", "/application/exif_header_extractor.py"]
